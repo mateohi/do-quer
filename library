@@ -28,6 +28,11 @@ create_bridge() {
   ip link add $BRG type bridge
   ip addr add $1 brd + dev $BRG # needed?
   ip link set $BRG up
+
+  # An alternative to iptables is:
+  # echo 0 > /proc/sys/net/bridge/bridge-nf-call-iptables
+  # This makes packets that go through a linux bridge not call iptables
+  iptables -A FORWARD -p all -i $BRG -j ACCEPT
 }
 
 # Usage: set_master <interface>

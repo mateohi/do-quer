@@ -7,8 +7,9 @@ source library
 check_root
 
 echo "Cleaning up ..."
+iptables -D FORWARD -p all -i $BRG -j ACCEPT
 ip link delete $BRG
-echo "Deleted bridge"
+echo "Deleted bridge and bridge rules"
 
 for i in $(seq 1 $NUM_NNS); do
     ip link delete ${VETH_HOST_PREFIX}$i
