@@ -20,6 +20,7 @@ create_pair() {
   ip link set ${VETH_NNS_PREFIX}$1 netns ${NET_NS_PREFIX}$1
   ip -n ${NET_NS_PREFIX}$1 addr add $2 dev ${VETH_NNS_PREFIX}$1
   ip -n ${NET_NS_PREFIX}$1 link set ${VETH_NNS_PREFIX}$1 up
+  ip -n ${NET_NS_PREFIX}$1 link set lo up
   ip link set ${VETH_HOST_PREFIX}$1 up
 }
 
