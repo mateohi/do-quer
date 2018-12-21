@@ -24,10 +24,8 @@ create_pair() {
   ip link set ${VETH_HOST_PREFIX}$1 up
 }
 
-# Usage: create_bridge <cidr IP addr>
 create_bridge() {
   ip link add $BRG type bridge
-  ip addr add $1 brd + dev $BRG # needed?
   ip link set $BRG up
 
   # An alternative to iptables is:

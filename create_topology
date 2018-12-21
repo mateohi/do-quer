@@ -6,15 +6,11 @@ source library
 
 check_root
 
-ip_addr() {
-    echo "10.0.0.$1/24"
-}
-
-create_bridge `ip_addr 100`
+create_bridge
 echo "Created bridge"
 
 for i in $(seq 1 $NUM_NNS); do
-    create_pair $i `ip_addr $i`
+    create_pair $i "10.0.0.$i/24"
     set_master "${VETH_HOST_PREFIX}$i"
     echo "Created and configured veth pair $i"
 done
