@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source library
+
+check_root
+
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <source number> <destination IP>"
+    exit 1
+fi
+
+ip netns exec ${NET_NS_PREFIX}$1 ping -c 5 -i 0.5 $2
+

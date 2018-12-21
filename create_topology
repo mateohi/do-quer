@@ -1,0 +1,22 @@
+#!/bin/bash
+
+set -e
+
+source library
+
+check_root
+
+ip_addr() {
+    echo "10.0.0.$1/24"
+}
+
+create_bridge `ip_addr 100`
+echo "Created bridge"
+
+for i in $(seq 1 $NUM_NNS); do
+    create_pair $i `ip_addr $i`
+    set_master "${VETH_HOST_PREFIX}$i"
+    echo "Created and configured veth pair $i"
+done
+
+echo "Done!"

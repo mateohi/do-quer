@@ -1,0 +1,13 @@
+#!/bin/bash
+
+source library
+
+check_root
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <source number>"
+    exit 1
+fi
+
+ip netns exec ${NET_NS_PREFIX}$1 tcpdump -leni ${VETH_NNS_PREFIX}$1
+

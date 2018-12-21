@@ -1,0 +1,37 @@
+#!/bin/bash
+
+BRG="test-bridge"
+VETH_HOST_PREFIX="veth"
+VETH_NNS_PREFIX="vm"
+NET_NS_PREFIX="nns"
+NUM_NNS=2
+
+check_root() {
+    if [ $(id -u) -ne 0 ]; then
+        echo "$0 must be run as root. Try: sudo $0 $@"
+        exit 1
+    fi
+}
+
+# Usage: create_pair <number id> <cidr IP addr>
+create_pair() {
+  ip netns add ${NET_NS_PREFIX}$1
+  ip link add dev ${VETH_HOST_PREFIX}$1 type veth peer name ${VETH_NNS_PREFIX}$1
+  ip link set ${VETH_NNS_PREFIX}$1 netns ${NET_NS_PREFIX}$1
+  ip -n ${NET_NS_PREFIX}$1 addr add $2 dev ${VETH_NNS_PREFIX}$1
+  ip -n ${NET_NS_PREFIX}$1 link set ${VETH_NNS_PREFIX}$1 up
+  ip link set ${VETH_HOST_PREFIX}$1 up
+}
+
+# Usage: create_bridge <cidr IP addr>
+create_bridge() {
+  ip link add $BRG type bridge
+  ip addr add $1 brd + dev $BRG # needed?
+  ip link set $BRG up
+}
+
+# Usage: set_master <interface>
+set_master() {
+  ip link set $1 master $BRG
+}
+
